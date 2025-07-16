@@ -11,5 +11,5 @@ const userSchema = new mongoose.Schema({
   resendOtpExpiresAt: { type: Number, default: 0 },
 });
 
-const user = mongoose.models.user || mongoose.model("user", userSchema);
-export default user;
+const userModel = mongoose.models.user || mongoose.model("user", userSchema);
+export default userModel;
