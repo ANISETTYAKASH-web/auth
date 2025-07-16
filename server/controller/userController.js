@@ -1,6 +1,7 @@
 import userModel from "../Models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import transporter from "../config/nodemailer.js";
 export const register = async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -21,10 +22,17 @@ export const register = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "null" : "Strict",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
       maxAge: 86400000, //86400000 is 24 hrs in milliseconds
     });
-    return res.json({ success: true });
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: "Hello Welcome to our Website",
+      text: `thank u for signing with us using u r email Id ${email}`,
+    };
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true });
   } catch (error) {
     res.send({ success: false, error: error.message });
   }
@@ -35,7 +43,7 @@ export const loginUser = async (req, res) => {
     return res.send({ success: false, message: "Details missing" });
   }
   try {
-    const user = await userModel.findOne({ user });
+    const user = await userModel.findOne({ email });
     if (!user) {
       return res.send({
         success: false,
@@ -52,8 +60,20 @@ export const loginUser = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "null" : "Strict",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
       maxAge: 86400000, //86400000 is 24 hrs in milliseconds
+    });
+    return res.json({ success: true });
+  } catch (error) {
+    res.send({ success: false, error: error.message });
+  }
+};
+export const logout = async (req, res) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
     });
     return res.json({ success: true });
   } catch (error) {
