@@ -7,7 +7,7 @@ import {
   resetPassword,
   sendOtp,
   verifyOtp,
-} from "../controller/userController.js";
+} from "../controller/authController.js";
 import getUserId from "../middleware/authToken.js";
 const authRouter = express.Router();
 authRouter.post("/register", register);
