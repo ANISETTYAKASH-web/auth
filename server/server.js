@@ -4,6 +4,7 @@ import cors from "cors";
 import connect from "./config/mangoDB.js";
 import authRouter from "./routes/authRoutes.js";
 import cookieParser from "cookie-parser";
+import userRouter from "./routes/userRoutes.js";
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
   res.send("hello world // API WORKING");
 });
 app.use("/api/auth", authRouter);
+app.use("/api/getdata", userRouter);
 app.listen(process.env.PORT, () => {
   console.log(`listening on port:${process.env.PORT}`);
 });
