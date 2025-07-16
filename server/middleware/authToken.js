@@ -13,10 +13,8 @@ export const getUserId = async (req, res, next) => {
   }
   try {
     const verifyStatus = await jwt.verify(token, process.env.JWT_SECRET);
-    console.log(verifyStatus);
     if (verifyStatus) {
       req.body.user_id = verifyStatus.user_id;
-      console.log("user-id", req.body.user_id);
     } else {
       return res.json({
         success: false,
